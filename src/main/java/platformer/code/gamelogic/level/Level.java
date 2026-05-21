@@ -215,7 +215,12 @@ public class Level {
 
 		if (row + 1 < map.getTiles()[0].length && !(map.getTiles()[col][row + 1] instanceof Water)
 				&& !(map.getTiles()[col][row + 1].isSolid())) {
-			water(col, row + 1, map, 0);
+			if (row + 2 < map.getTiles()[0].length && !(map.getTiles()[col][row + 2] instanceof Water)
+				&& (map.getTiles()[col][row + 1].isSolid())) {
+				water(col, row + 1, map, 3);
+			} else {
+				water(col, row + 1, map, 0);
+			}
 		} else {
 
 			if (col + 1 < map.getTiles().length && !(map.getTiles()[col + 1][row] instanceof Water)
