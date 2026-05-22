@@ -213,10 +213,13 @@ public class Level {
 
 		map.addTile(col, row, w);
 
+		if (!(row + 1 < map.getTiles()[0].length)){
+			return;
+		}
+
 		if (row + 1 < map.getTiles()[0].length && !(map.getTiles()[col][row + 1] instanceof Water)
 				&& !(map.getTiles()[col][row + 1].isSolid())) {
-			if (row + 2 < map.getTiles()[0].length && !(map.getTiles()[col][row + 2] instanceof Water)
-				&& (map.getTiles()[col][row + 1].isSolid())) {
+			if (row + 2 < map.getTiles()[0].length && (map.getTiles()[col][row + 2].isSolid())) {
 				water(col, row + 1, map, 3);
 			} else {
 				water(col, row + 1, map, 0);
