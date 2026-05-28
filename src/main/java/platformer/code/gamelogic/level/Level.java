@@ -195,7 +195,12 @@ public class Level {
 	}
 	//Adds gas tiles until the requisite number of squares are filled or there is no more room 
 	private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<Gas> placedThisRound) {
-     
+		for (int i = 0; i < numSquaresToFill; i++){
+			Gas g = null;
+			if (row-1 >=0 && !(map.getTiles()[col][row - 1] instanceof Water) && !(map.getTiles()[col][row - 1].isSolid()) && !(map.getTiles()[col][row - 1] instanceof Gas)){
+				g = new Gas(col, row-1, 1, tileset.getImage("Gas_one"), this, 0);
+			}
+		}
 	}	
 	// #############################################################################################################
 	// Your code goes here!
