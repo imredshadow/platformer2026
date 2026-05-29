@@ -195,12 +195,28 @@ public class Level {
 	}
 	//Adds gas tiles until the requisite number of squares are filled or there is no more room 
 	private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<Gas> placedThisRound) {
-		for (int i = 0; i < numSquaresToFill; i++){
-			Gas g = null;
-			if (row-1 >=0 && !(map.getTiles()[col][row - 1] instanceof Water) && !(map.getTiles()[col][row - 1].isSolid()) && !(map.getTiles()[col][row - 1] instanceof Gas)){
-				g = new Gas(col, row-1, 1, tileset.getImage("Gas_one"), this, 0);
+		Gas g = new Gas(col, row, 1, tileset.getImage("Gas_one"), this, 0);
+		map.addTile(col, row, g);
+		//for (int i = 0; i < numSquaresToFill; i++){
+			for	(int newRow = row-1; newRow <= row+1; newRow++ ){
+				for (int newCol = col; true; newCol++ ){
+					if (newRow-1 >=0 && !(map.getTiles()[newCol][newRow].isSolid()) && !(map.getTiles()[newCol][newRow] instanceof Gas)){
+						Gas gg = new Gas(newCol, newRow, 1, tileset.getImage("Gas_one"), this, 0);
+						map.addTile(newCol, newRow, gg);
+					}
+					if(newCol == col+1){
+						newCol-=3;
+					}
+					else if(newCol == col -1){
+						break;
+					}
+				}
 			}
-		}
+			// g = null;
+			// if (row-1 >=0 && !(map.getTiles()[col][row - 1] instanceof Water) && !(map.getTiles()[col][row - 1].isSolid()) && !(map.getTiles()[col][row - 1] instanceof Gas)){
+			// 	g = new Gas(col, row-1, 1, tileset.getImage("Gas_one"), this, 0);
+			// }
+		//}
 	}	
 	// #############################################################################################################
 	// Your code goes here!
