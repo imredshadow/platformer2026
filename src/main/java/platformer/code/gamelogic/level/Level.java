@@ -119,6 +119,8 @@ public class Level {
 					tiles[x][y] = new Water(xPosition, yPosition, tileSize, tileset.getImage("Half_water"), this, 2);
 				else if (values[x][y] == 21)
 					tiles[x][y] = new Water(xPosition, yPosition, tileSize, tileset.getImage("Quarter_water"), this, 1);
+				else if (values[x][y] == 22)
+					tiles[x][y] = new SolidTile(xPosition, yPosition, tileSize, tileset.getImage("Six_seven"), this);
 			}
 
 		}
@@ -199,7 +201,7 @@ public class Level {
 		placedThisRound.add(g);
 		numSquaresToFill--;
 		//for (int i = 0; i < numSquaresToFill; i++){
-		
+		while (numSquaresToFill > 0){
 			for	(int newRow = row-1; newRow <= row+1; newRow++ ){
 				for (int newCol = col; true; newCol++ ){
 					if (newRow-1 >=0 && !(map.getTiles()[newCol][newRow].isSolid()) && !(map.getTiles()[newCol][newRow] instanceof Gas)){
@@ -216,6 +218,7 @@ public class Level {
 					}
 				}
 			}
+		}
 			// g = null;
 			// if (row-1 >=0 && !(map.getTiles()[col][row - 1] instanceof Water) && !(map.getTiles()[col][row - 1].isSolid()) && !(map.getTiles()[col][row - 1] instanceof Gas)){
 			// 	g = new Gas(col, row-1, 1, tileset.getImage("Gas_one"), this, 0);
