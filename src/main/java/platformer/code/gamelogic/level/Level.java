@@ -198,6 +198,7 @@ public class Level {
 	// Adds gas tiles until the requisite number of squares are filled or there is
 	// no more room
 	private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<Gas> placedThisRound) {
+		// numSquaresToFill = 13;
 		Gas g = new Gas(col, row, tileSize, tileset.getImage("Gas_one"), this, 0);
 		map.addTile(col, row, g);
 		placedThisRound.add(g);
@@ -208,18 +209,20 @@ public class Level {
 
 			int theRow = placedThisRound.get(0).getRow();
 			int theCol = placedThisRound.get(0).getCol();
+			System.out.println("trying at "+ theRow + " "+theCol);
 			for (int newRow = theRow - 1; newRow <= theRow + 1; newRow++) {
 				for (int newCol = theCol; true; newCol++) {
 					if (newRow>= 0 && newRow<map.getTiles()[0].length && !(map.getTiles()[newCol][newRow].isSolid())
 							&& !(map.getTiles()[newCol][newRow] instanceof Gas)&& numSquaresToFill>0) {
+						System.out.println("trying to draw at "+newRow+" "+newCol);
 						Gas gg = new Gas(newCol, newRow, tileSize, tileset.getImage("Gas_one"), this, 0);
 						numSquaresToFill--;
 						map.addTile(newCol, newRow, gg);
 						placedThisRound.add(gg);
 					}
-					if (newCol == col + 1) {
+					if (newCol == theCol + 1) {
 						newCol -= 3;
-					} else if (newCol == col - 1) {
+					} else if (newCol == theCol - 1) {
 						break;
 					}
 				}
