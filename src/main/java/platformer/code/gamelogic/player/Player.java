@@ -13,7 +13,7 @@ import platformer.code.gamelogic.tiles.Tile;
 public class Player extends PhysicsObject{
 	public float walkSpeed = 400;
 	public float jumpPower = 1350;
-
+	public boolean inWater = false;
 	private boolean isJumping = false;
 
 	public Player(float x, float y, Level level) {
@@ -29,10 +29,18 @@ public class Player extends PhysicsObject{
 		
 		movementVector.x = 0;
 		if(PlayerInput.isLeftKeyDown()) {
-			movementVector.x = -walkSpeed;
+			if (this.inWater == true){
+				movementVector.x = -(walkSpeed/3);
+			} else {
+				movementVector.x = -walkSpeed;
+			}
 		}
 		if(PlayerInput.isRightKeyDown()) {
-			movementVector.x = +walkSpeed;
+			if (this.inWater == true){
+				movementVector.x = +(walkSpeed/3);
+			} else {
+				movementVector.x = +walkSpeed;
+			}
 		}
 		if(PlayerInput.isJumpKeyDown() && !isJumping) {
 			movementVector.y = -jumpPower;

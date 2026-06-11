@@ -186,16 +186,23 @@ public class Level {
 
 			for (int i = 0; i < waters.size(); i++) {
 				if (waters.get(i).getHitbox().isIntersecting(player.getHitbox())) {
-					if(waterTimer == 0){
-						waterTimer = System.currentTimeMillis();
+					//timer code in case you want to reference it
+					// if(waterTimer == 0){
+					// 	waterTimer = System.currentTimeMillis();
+					// }
+					// else{
+					// 	if ((System.currentTimeMillis()-waterTimer)/1000>= waterLimit){
+					// 		//whatever happens if the water runs out
+					// 		waterTimer=0;
+					// 	}
+					player.inWater = true;
+					break;
 					}
 					else{
-						if ((System.currentTimeMillis()-waterTimer)/1000>= waterLimit){
-							//whatever happens if the water runs out
-							waterTimer=0;
-						}
+						player.inWater = false;
 					}
-				}
+				
+				
 			}
 
 			// Update the enemies
