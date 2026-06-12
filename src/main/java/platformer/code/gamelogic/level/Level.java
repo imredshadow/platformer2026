@@ -3,6 +3,7 @@ package platformer.code.gamelogic.level;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class Level {
 	private ArrayList<Enemy> enemiesList = new ArrayList<>();
 	private ArrayList<Flower> flowers = new ArrayList<>();
 	private ArrayList<Water> waters = new ArrayList<>();
+	private ArrayList<Gas> gasses = new ArrayList<>();
 
 	private List<PlayerDieListener> dieListeners = new ArrayList<>();
 	private List<PlayerWinListener> winListeners = new ArrayList<>();
@@ -50,6 +52,9 @@ public class Level {
 	public static float GRAVITY = 70;
 	private long waterTimer = 0;
 	private long waterLimit = 5;
+	private long gasTimer = 0;
+	private long gasLimit = 5;
+	private int score =0;
 
 	public Level(LevelData leveldata) {
 		this.leveldata = leveldata;
@@ -65,6 +70,10 @@ public class Level {
 	}
 
 	public void restartLevel() {
+		gasses.clear();
+		waters.clear();
+		waterTimer = 0;
+		gasTimer = 0;
 		int[][] values = mapdata.getValues();
 		Tile[][] tiles = new Tile[width][height];
 
@@ -201,8 +210,19 @@ public class Level {
 					else{
 						player.inWater = false;
 					}
-				
-				
+			}
+
+			for (int i = 0; i < gasses.size(); i++){
+				if (gasses.get(i).getHitbox().isIntersecting(player.getHitbox())) {
+					if (gasTimer == 0){
+						gasTimer = System.currentTimeMillis();
+					} else {
+						if ((System.currentTimeMillis()-gasTimer)/1000 >= gasLimit){
+							gasTimer = 0;
+							onPlayerDeath();
+						}
+					}
+				}
 			}
 
 			// Update the enemies
@@ -228,6 +248,7 @@ public class Level {
 		Gas g = new Gas(col, row, tileSize, tileset.getImage("Gas_one"), this, 0);
 		map.addTile(col, row, g);
 		placedThisRound.add(g);
+		gasses.add(g);
 		numSquaresToFill--;
 
 		// for (int i = 0; i < numSquaresToFill; i++){
@@ -243,6 +264,7 @@ public class Level {
 						System.out.println("trying to draw at "+newRow+" "+newCol);
 						Gas gg = new Gas(newCol, newRow, tileSize, tileset.getImage("Gas_one"), this, 0);
 						numSquaresToFill--;
+						gasses.add(gg);
 						map.addTile(newCol, newRow, gg);
 						placedThisRound.add(gg);
 					}
@@ -377,10 +399,12 @@ public class Level {
 
 		g.setColor(Color.RED);
 		g.setFont(new Font("Arial", Font.BOLD, 40));
-		if (waterTimer != 0){
-			g.drawString((System.currentTimeMillis()-waterTimer)/1000 +"", (int)player.getX(), (int)player.getY()+10);
+		if (gasTimer != 0){
+			g.drawString((System.currentTimeMillis()-gasTimer)/1000 +"", (int)player.getX(), (int)player.getY()+10);
 		}
-		
+		g.setColor(Color.RED);
+		g.setFont(new Font("arial", Font.BOLD, 30));
+		g.drawString(score+"",(int)camera.getX()+20, (int)camera.getY()+20);
 		// used for debugging
 		if (Camera.SHOW_CAMERA)
 			camera.draw(g);
