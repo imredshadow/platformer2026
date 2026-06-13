@@ -19,6 +19,7 @@ import platformer.code.gamelogic.tiledMap.Map;
 import platformer.code.gamelogic.tiles.Flag;
 import platformer.code.gamelogic.tiles.Flower;
 import platformer.code.gamelogic.tiles.Gas;
+import platformer.code.gamelogic.tiles.SixSeven;
 import platformer.code.gamelogic.tiles.SolidTile;
 import platformer.code.gamelogic.tiles.Spikes;
 import platformer.code.gamelogic.tiles.Tile;
@@ -40,6 +41,7 @@ public class Level {
 	private ArrayList<Flower> flowers = new ArrayList<>();
 	private ArrayList<Water> waters = new ArrayList<>();
 	private ArrayList<Gas> gasses = new ArrayList<>();
+	private ArrayList<SixSeven> sixsevens = new ArrayList<>();
 
 	private List<PlayerDieListener> dieListeners = new ArrayList<>();
 	private List<PlayerWinListener> winListeners = new ArrayList<>();
@@ -70,10 +72,12 @@ public class Level {
 	}
 
 	public void restartLevel() {
+		sixsevens.clear();
 		gasses.clear();
 		waters.clear();
 		waterTimer = 0;
 		gasTimer = 0;
+		score = 0;
 		int[][] values = mapdata.getValues();
 		Tile[][] tiles = new Tile[width][height];
 
@@ -133,8 +137,10 @@ public class Level {
 					tiles[x][y] = new Water(xPosition, yPosition, tileSize, tileset.getImage("Half_water"), this, 2);
 				else if (values[x][y] == 21)
 					tiles[x][y] = new Water(xPosition, yPosition, tileSize, tileset.getImage("Quarter_water"), this, 1);
-				else if (values[x][y] == 22)
-					tiles[x][y] = new SolidTile(xPosition, yPosition, tileSize, tileset.getImage("Six_seven"), this);
+				else if (values[x][y] == 22) {
+					tiles[x][y] = new SixSeven(xPosition, yPosition, tileSize, tileset.getImage("Six_seven"), this);
+					sixsevens.add((SixSeven) tiles[x][y]);
+				}
 			}
 
 		}
@@ -192,7 +198,7 @@ public class Level {
 					i--;
 				}
 			}
-
+			//Loops throught all the water tiles and detects if the player is colliding with any of the water tiles
 			for (int i = 0; i < waters.size(); i++) {
 				if (waters.get(i).getHitbox().isIntersecting(player.getHitbox())) {
 					//timer code in case you want to reference it
@@ -212,6 +218,8 @@ public class Level {
 					}
 			}
 
+			//Loops throught all the gas tiles and detects if the player is colliding with any of the gas tiles,
+			//then counts to 5, then kills the player at the end of the countdown
 			for (int i = 0; i < gasses.size(); i++){
 				if (gasses.get(i).getHitbox().isIntersecting(player.getHitbox())) {
 					if (gasTimer == 0){
@@ -222,6 +230,21 @@ public class Level {
 							onPlayerDeath();
 						}
 					}
+				}
+			}
+
+			//Loops throught all the 67 tiles and detects if the player is colliding with any of the 67 tiles
+			//increases the score, then replaces the tile with an empty one
+			for (int i = 0; i < sixsevens.size(); i++){
+				if (sixsevens.get(i).getHitbox().isIntersecting(player.getHitbox())) {
+					System.out.println("toching 67");
+					score++;
+					
+					
+					map.getTiles()[sixsevens.get(i).getCol()][sixsevens.get(i).getRow()] = new Tile(sixsevens.get(i).getCol(), sixsevens.get(i).getRow(), tileSize, null, false, this);
+					sixsevens.remove(i);
+
+					i--;
 				}
 			}
 
@@ -403,8 +426,8 @@ public class Level {
 			g.drawString((System.currentTimeMillis()-gasTimer)/1000 +"", (int)player.getX(), (int)player.getY()+10);
 		}
 		g.setColor(Color.RED);
-		g.setFont(new Font("arial", Font.BOLD, 30));
-		g.drawString(score+"",(int)camera.getX()+20, (int)camera.getY()+20);
+		g.setFont(new Font("arial", Font.BOLD, 75));
+		g.drawString(score+"",(int)camera.getX()+600, (int)camera.getY()+100);
 		// used for debugging
 		if (Camera.SHOW_CAMERA)
 			camera.draw(g);

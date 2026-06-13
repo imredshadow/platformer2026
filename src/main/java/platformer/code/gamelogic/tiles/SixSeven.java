@@ -15,6 +15,7 @@ public class SixSeven extends Tile {
 	public void update(float tslf) {
 		if(hitbox.isIntersecting(Level.player.getHitbox())){
 			//when i hit it
+			
 		}
 	}
     
